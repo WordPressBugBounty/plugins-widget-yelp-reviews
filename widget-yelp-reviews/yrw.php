@@ -4,7 +4,7 @@ Plugin Name: Widget for Yelp Reviews
 Plugin URI: https://richplugins.com
 Description: Instantly Yelp rating and reviews on your website to increase user confidence and SEO.
 Author: RichPlugins <support@richplugins.com>
-Version: 1.7.8
+Version: 1.8
 Author URI: https://richplugins.com
 */
 
@@ -15,7 +15,7 @@ require(ABSPATH . 'wp-includes/version.php');
 include_once(dirname(__FILE__) . '/api/urlopen.php');
 include_once(dirname(__FILE__) . '/helper/debug.php');
 
-define('YRW_VERSION',            '1.7.8');
+define('YRW_VERSION',            '1.8');
 define('YRW_API',                'https://api.yelp.com/v3/businesses');
 define('YRW_PLUGIN_URL',         plugins_url(basename(plugin_dir_path(__FILE__ )), basename(__FILE__)));
 define('YRW_AVATAR',             YRW_PLUGIN_URL . '/static/img/yelp-avatar.png');
@@ -336,7 +336,7 @@ function yrw_save_reviews($business, $reviews) {
 
     $yelp_business_id = $wpdb->get_var($wpdb->prepare("SELECT id FROM " . $wpdb->prefix . "yrw_yelp_business WHERE business_id = %s", $business->id));
     if ($yelp_business_id) {
-        $wpdb->query($wpdb->prepare("UPDATE " . $wpdb->prefix . "yrw_yelp_business SET rating = %s, review_count = %s WHERE ID = %s", $business->rating, $business->review_count, $yelp_business_id));
+        $wpdb->query($wpdb->prepare("UPDATE " . $wpdb->prefix . "yrw_yelp_business SET rating = %s, review_count = %s, name = %s, photo = %s WHERE ID = %s", $business->rating, $business->review_count, $business->name, $business->image_url, $yelp_business_id));
     } else {
         $address = implode(", ", array($business->location->address1, $business->location->city, $business->location->state, $business->location->zip_code));
         $wpdb->query($wpdb->prepare("INSERT INTO " . $wpdb->prefix . "yrw_yelp_business (business_id, name, photo, address, rating, url, review_count) VALUES (%s, %s, %s, %s, %s, %s, %s)", $business->id, $business->name, $business->image_url, $address, $business->rating, $business->url, $business->review_count));
